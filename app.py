@@ -12,12 +12,13 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import docker
-from pushover import init, Client
 import os
+import signal
 import sys
 import time
-import signal
+
+import docker
+from pushover import Client, init
 
 event_filters = ["create","update","destroy","die","kill","pause","unpause","start","stop"]
 ignore_names = []
@@ -69,18 +70,15 @@ def watch_and_notify_events(client):
                         when)
         send_message(message)
 
+pushover_client = None
 
 def send_message(message):
-    client = Client(po_key, api_token=po_token)
-    client.send_message(message,title="Docker Event")
-##    global pb_key
-##    pb = Pushbullet(pb_key)
-##    pb.push_note("Docker Event", message)
+    pushover_client.send_message(message,title=f"Docker Event on {host}")
     pass
 
 
 def exit_handler(_signo, _stack_frame):
-    send_message('{} received SIGTERM on {}. Goodbye!'.format(APP_NAME, host))
+    send_message(f'{APP_NAME} received SIGTERM on {host}. Goodbye!')
     sys.exit(0)
 
 
@@ -89,9 +87,9 @@ def host_server(client):
 
 
 if __name__ == '__main__':
-##    pb_key = get_config("PB_API_KEY")
     po_token = get_config("PUSHOVER_TOKEN")
     po_key = get_config("PUSHOVER_KEY")
+    global pushover_client = Client(po_key, api_token=po_token)
 
     events_string = get_config("EVENTS", True)
     if events_string:
