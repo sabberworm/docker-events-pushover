@@ -1,19 +1,20 @@
 # Docker Events Pushover
-Receive Pushover notifications when on docker container events
+Receive Pushover notifications on docker container events
 
 ## How it works
-This image connects to the host machine socket, through a volume mapping, and listen [Docker Events API](https://docs.docker.com/engine/api/v1.41/#operation/SystemEvents).
 
-When specified events are triggered it sends the affected information to Pushover.  
+This container connects to the host machine’s Docker socket through a volume mapping, and listens to events using the [Docker events API](https://docs.docker.com/engine/api/v1.41/#operation/SystemEvents).
+
+When certain events are triggered it sends the affected information to Pushover.  
 
 ## Environment variables
 
 * `PUSHOVER_TOKEN`: The App token for your Pushover app. _Required_.
 * `PUSHOVER_KEY`: The Pushover API key for your account/group. _Required_.
 * `EVENTS`: Comma-separated list of events to include. Defaults to `create,update,destroy,die,kill,pause,unpause,start,stop`.
-* `IGNORE_NAMES`: Comma-separated list of container names to ignore.
+* `IGNORE_NAMES`: Comma-separated list of container names to ignore. Defaults to none.
 * `IGNORE_LABELS`: Comma-separated list of container labels to ignore. Defaults to `docker-events.ignore`. Label values are not considered.
-* `IGNORE_CLEAN_EXIT`: Set to `1` to ignore `die` events that were clean (exit code `0`).
+* `IGNORE_CLEAN_EXIT`: Set to `1` to ignore `die` events that were clean (exit code `0`). Defaults to `0`.
 
 ## Run
 
