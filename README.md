@@ -14,7 +14,7 @@ When certain events are triggered it sends the affected information to Pushover.
 * `EVENTS`: Comma-separated list of events to include. Defaults to `create,update,destroy,die,kill,pause,unpause,start,stop`.
 * `IGNORE_NAMES`: Comma-separated list of container names to ignore. Defaults to none.
 * `IGNORE_LABELS`: Comma-separated list of container labels to ignore. Defaults to `docker-events.ignore`. Label values are not considered.
-* `IGNORE_CLEAN_EXIT`: Set to `1` to ignore `die` events that were clean (exit code `0`). Defaults to `0`.
+* `IGNORE_CLEAN_EXIT`: Set to a non-empty value to ignore `die` events that were clean (exit code `0`).
 
 ## Run
 
