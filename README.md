@@ -2,13 +2,9 @@
 Receive Pushover notifications when on docker container events
 
 ## How it works
-This image connects to the host machine socket, through a volume mapping, and listen [Docker Events API](https://docs.docker.com/engine/reference/api/docker_remote_api_v1.24/#/monitor-dockers-events).
+This image connects to the host machine socket, through a volume mapping, and listen [Docker Events API](https://docs.docker.com/engine/api/v1.41/#operation/SystemEvents).
 
-When specified events are triggered it sends the affected containers' information to PushBullet.  
-
-If no events are specified in the enironment variables, these are the default ones: "create","update","destroy","die","kill","pause","unpause","start","stop"
-
-If the label docker-events.ignore is specified, then that container will not be checked.
+When specified events are triggered it sends the affected information to Pushover.  
 
 ## Environment variables
 
