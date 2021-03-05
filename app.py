@@ -22,7 +22,8 @@ from pushover import Client, init
 
 event_filters = ["create","update","destroy","die","kill","pause","unpause","start","stop"]
 ignore_names = []
-ignore_label = "docker-events.ignore"
+ignore_labels = ["docker-events.ignore"]
+ignore_clean_exit = False
 
 BUILD_VERSION=os.getenv('BUILD_VERSION')
 APP_NAME = 'Docker Events Pushover (v{})'.format(BUILD_VERSION)
@@ -34,6 +35,22 @@ def get_config(env_key, optional=False):
         sys.exit(1)
     return value
 
+def handle_event(event):
+    attributes = event['Actor']['Attributes']
+
+    if attributes['name'] in ignore_names:
+        return
+
+    for ignore_label in ignore_labels:
+        if ignore_label in attributes:
+            return
+
+    if ignore_clean_exit and 'exitCode' in attributes and attributes['exitCode'] == '0':
+        return
+
+    when = time.strftime('%Y-%m-%d %H:%M:%S %Z', time.localtime(event['time']))
+    send_message(f"Container event {event['status']} ({when}): {attributes}")
+
 
 def watch_and_notify_events(client):
     global event_filters
@@ -41,34 +58,8 @@ def watch_and_notify_events(client):
     event_filters = {"event": event_filters}
 
     for event in client.events(filters=event_filters, decode=True):
-#        print(event)
-        container_id = event['Actor']['ID'][:12]
-        attributes = event['Actor']['Attributes']
-        when = time.strftime('%Y-%m-%d %H:%M:%S %Z', time.localtime(event['time']))
-        event['status'] = event['status']+'d'
+        handle_event(event)
 
-        x = 'no'
-
-        try:
-            x = event['Actor']['Attributes']['docker-events.ignore']
-        except KeyError:
-            pass
-
-        if x != 'no':
-#            print('docker-events.ignore specified')
-            continue
-		
-#       print('docker-events.ignore NOT specified')
-			
-        if attributes['name'] in ignore_names:
-            continue
-
-        message = "The container {} ({}) {} at {}" \
-                .format(attributes['name'],
-                        attributes['image'],
-                        event['status'],
-                        when)
-        send_message(message)
 
 pushover_client = None
 
@@ -78,7 +69,7 @@ def send_message(message):
 
 
 def exit_handler(_signo, _stack_frame):
-    send_message(f'{APP_NAME} received SIGTERM on {host}. Goodbye!')
+    send_message(f'{APP_NAME} received SIGTERM. Goodbye!')
     sys.exit(0)
 
 
@@ -89,7 +80,7 @@ def host_server(client):
 if __name__ == '__main__':
     po_token = get_config("PUSHOVER_TOKEN")
     po_key = get_config("PUSHOVER_KEY")
-    global pushover_client = Client(po_key, api_token=po_token)
+    pushover_client = Client(po_key, api_token=po_token)
 
     events_string = get_config("EVENTS", True)
     if events_string:
@@ -99,14 +90,20 @@ if __name__ == '__main__':
     if ignore_strings:
         ignore_names = ignore_strings.split(',')
 
+    ignore_label_strings = get_config("IGNORE_LABELS", True)
+    if ignore_label_strings:
+        ignore_labels = ignore_label_strings.split(',')
+
+    ignore_clean_exit = bool(os.getenv('IGNORE_CLEAN_EXIT'))
+
     signal.signal(signal.SIGTERM, exit_handler)
     signal.signal(signal.SIGINT, exit_handler)
 
     client = docker.DockerClient(base_url='unix://var/run/docker.sock')
     host = host_server(client)
 
-#    message = '{} reporting for duty on {}'.format(APP_NAME, host)
-#    send_message(message)
+    message = '{} reporting for duty on {}'.format(APP_NAME, host)
+    send_message(message)
 
     watch_and_notify_events(client)
 
