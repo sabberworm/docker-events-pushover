@@ -17,7 +17,7 @@ This script connects to a Docker server, and listens to events using the [Docker
 
 ## Run
 
-1. Get a [Pushover](https://https://pushover.net/) account
+1. Get a [Pushover](https://pushover.net/) account
 2. Make a note of your user key (`export PUSHOVER_KEY="«INSERT-KEY-HERE»"`)
 3. Create a new application within pushover, and make a note of the token (`export PUSHOVER_TOKEN="«INSERT-TOKEN-HERE»"`)
 4. Install requirements using `pip install -r requirements.txt`
