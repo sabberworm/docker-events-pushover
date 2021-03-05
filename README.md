@@ -15,13 +15,16 @@ This script connects to a Docker server, and listens to events using the [Docker
 * `IGNORE_CLEAN_EXIT`: Set to a non-empty value to ignore `die` events that were clean (exit code `0`).
 * `DOCKER_URL`: The connection string for the docker client. Defaults to `unix://var/run/docker.sock` (socket connection).
 
-## Run
+## Prerequsites
 
 1. Get a [Pushover](https://pushover.net/) account
 2. Make a note of your user key (`export PUSHOVER_KEY="«INSERT-KEY-HERE»"`)
 3. Create a new application within pushover, and make a note of the token (`export PUSHOVER_TOKEN="«INSERT-TOKEN-HERE»"`)
-4. Install requirements using `pip install -r requirements.txt`
-5. Run using `python -m docker-events-pushover`
+
+## Run
+
+1. Install requirements using `pip install -r requirements.txt`
+2. Run using `python -m docker-events-pushover`
 
 ### Run with docker
 
