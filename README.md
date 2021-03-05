@@ -10,6 +10,15 @@ If no events are specified in the enironment variables, these are the default on
 
 If the label docker-events.ignore is specified, then that container will not be checked.
 
+## Environment variables
+
+* `PUSHOVER_TOKEN`: The App token for your Pushover app. _Required_.
+* `PUSHOVER_KEY`: The Pushover API key for your account/group. _Required_.
+* `EVENTS`: Comma-separated list of events to include. Defaults to `create,update,destroy,die,kill,pause,unpause,start,stop`.
+* `IGNORE_NAMES`: Comma-separated list of container names to ignore.
+* `IGNORE_LABELS`: Comma-separated list of container labels to ignore. Defaults to `docker-events.ignore`. Label values are not considered.
+* `IGNORE_CLEAN_EXIT`: Set to `1` to ignore `die` events that were clean (exit code `0`).
+
 ## Build
 You must [create a release tag](https://git-scm.com/book/en/v2/Git-Basics-Tagging) in order to build and publish this image.
 ```shell
@@ -28,17 +37,6 @@ docker run \
     -v /var/run/docker.sock:/var/run/docker.sock \
     -e PUSHOVER_TOKEN="INSERT-TOKEN-HERE" \
     -e PUSHOVER_KEY="INSERT-KEY-HERE" \
-    derekoharrow/docker-events-pushover:latest
-```
-
-### Run (custom events)
-```shell
-docker run \
-    -d --restart=always \
-    -v /var/run/docker.sock:/var/run/docker.sock \
-    -e PUSHOVER_TOKEN="INSERT-TOKEN-HERE" \
-    -e PUSHOVER_KEY="INSERT-KEY-HERE" \
-    -e EVENTS="die,destroy,kill"
     derekoharrow/docker-events-pushover:latest
 ```
 
