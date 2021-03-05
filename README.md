@@ -19,41 +19,33 @@ If the label docker-events.ignore is specified, then that container will not be 
 * `IGNORE_LABELS`: Comma-separated list of container labels to ignore. Defaults to `docker-events.ignore`. Label values are not considered.
 * `IGNORE_CLEAN_EXIT`: Set to `1` to ignore `die` events that were clean (exit code `0`).
 
-## Build
-You must [create a release tag](https://git-scm.com/book/en/v2/Git-Basics-Tagging) in order to build and publish this image.
-```shell
-./build-all.sh
-```
-
 ## Run
 First, get a Pushover account (https://https://pushover.net/)
 Then, make a note of your User Key
 Then, create a new Application within Pushover, and make a note of the Token
 
-### Run (default events)
+### Run manually
+
 ```shell
 docker run \
     -d --restart=always \
     -v /var/run/docker.sock:/var/run/docker.sock \
     -e PUSHOVER_TOKEN="INSERT-TOKEN-HERE" \
     -e PUSHOVER_KEY="INSERT-KEY-HERE" \
-    derekoharrow/docker-events-pushover:latest
+    «name-of-built-image»
 ```
 
-### Run (Docker Compose/Stack)
-```yml
-version: '2'
- 
+### Run with docker-compose
+
+```yml 
 services:
   docker-events:
-    container_name: docker-events
-    image: derekoharrow/docker-events-pushover:latest
+    build: «/path/to/this/repository»
     volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
+      - /var/run/docker.sock:/var/run/docker.sock:ro
     environment:
       - PUSHOVER_TOKEN=INSERT-TOKEN-HERE
       - PUSHOVER_KEY=INSERT-KEY-HERE
-      - EVENTS=die,destroy,kill
     restart: unless-stopped
 
 ```
