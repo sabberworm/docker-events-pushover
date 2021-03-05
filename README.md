@@ -11,9 +11,9 @@ When certain events are triggered it sends the affected information to Pushover.
 
 * `PUSHOVER_TOKEN`: The app token for your Pushover app. _Required_.
 * `PUSHOVER_KEY`: The Pushover API key for your account/group. _Required_.
-* `EVENTS`: Comma-separated list of events to include. Defaults to `create,update,destroy,die,kill,pause,unpause,start,stop`.
-* `IGNORE_NAMES`: Comma-separated list of container names to ignore. Defaults to none.
-* `IGNORE_LABELS`: Comma-separated list of container labels to ignore. Defaults to `docker-events.ignore`. Label values are not considered.
+* `EVENTS`: Whitespace-separated list of events to include. Defaults to `create update destroy die kill pause unpause start stop`.
+* `IGNORE_NAMES`: Whitespace-separated list of container names to ignore. Defaults to none.
+* `IGNORE_LABELS`: Whitespace-separated list of container labels to ignore. Defaults to `docker-events.ignore`. Label values are not considered.
 * `IGNORE_CLEAN_EXIT`: Set to a non-empty value to ignore `die` events that were clean (exit code `0`).
 * `BUILD_VERSION`: The version of docker-events-pushover, for version info output in hello and goodbye messages.
 
