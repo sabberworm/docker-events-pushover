@@ -20,20 +20,23 @@ import time
 import docker
 from pushover import Client, init
 
-event_filters = ["create","update","destroy","die","kill","pause","unpause","start","stop"]
+event_filters = ["create", "update", "destroy", "die",
+                 "kill", "pause", "unpause", "start", "stop"]
 ignore_names = []
 ignore_labels = ["docker-events.ignore"]
 ignore_clean_exit = False
 
-BUILD_VERSION=os.getenv('BUILD_VERSION')
-APP_NAME = 'Docker Events Pushover (v{})'.format(BUILD_VERSION)
+BUILD_VERSION = os.getenv('BUILD_VERSION')
+APP_NAME = f'Docker Events Pushover (v{BUILD_VERSION})'
+
 
 def get_config(env_key, optional=False):
     value = os.getenv(env_key)
     if not value and not optional:
-        print('Environment variable {} is missing. Can\'t continue'.format(env_key))
+        print(f"Environment variable {env_key} is missing. Can't continue")
         sys.exit(1)
     return value
+
 
 def handle_event(event):
     attributes = event['Actor']['Attributes']
@@ -68,8 +71,8 @@ def send_message(message):
     pass
 
 
-def exit_handler(_signo, _stack_frame):
-    send_message(f'{APP_NAME} received SIGTERM. Goodbye!')
+def exit_handler(signo, _stack_frame):
+    send_message(f'{APP_NAME} {signal.strsignal(signo)}. Goodbye!')
     sys.exit(0)
 
 
@@ -102,7 +105,7 @@ if __name__ == '__main__':
     client = docker.DockerClient(base_url='unix://var/run/docker.sock')
     host = host_server(client)
 
-    message = '{} reporting for duty on {}'.format(APP_NAME, host)
+    message = f'{APP_NAME} reporting for duty on {host}'
     send_message(message)
 
     watch_and_notify_events(client)
