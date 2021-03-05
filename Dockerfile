@@ -1,9 +1,5 @@
 FROM python:3-alpine
 
-# Deploy version
-ARG BUILD_VERSION
-ENV BUILD_VERSION=${BUILD_VERSION}
-
 WORKDIR /usr/src/app
 
 COPY . /usr/src/app

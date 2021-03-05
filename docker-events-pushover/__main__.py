@@ -46,7 +46,7 @@ def handle_event(event):
         return
 
     when = time.strftime('%Y-%m-%d %H:%M:%S %Z', time.localtime(event['time']))
-    send_message(f'Container event {event['status']} ({when}): {attributes}')
+    send_message(f'Container event {event["status"]} ({when}): {attributes}')
 
 
 def send_message(message):
@@ -65,14 +65,13 @@ def host_server(docker_client):
 
 EVENT_FILTERS = get_config(
     'EVENTS',
-    'create update destroy die' kill pause unpause start stop'
+    'create update destroy die kill pause unpause start stop'
 ).split()
 IGNORE_NAMES = get_config('IGNORE_NAMES', '').split()
 IGNORE_LABELS = get_config('IGNORE_LABELS', 'docker-events.ignore').split()
 IGNORE_CLEAN_EXIT = bool(os.getenv('IGNORE_CLEAN_EXIT'))
 
-BUILD_VERSION = os.getenv('BUILD_VERSION')
-APP_NAME = f'Docker Events Pushover (v{BUILD_VERSION})'
+APP_NAME = 'Docker Events Pushover'
 
 PUSHOVER_TOKEN = get_config('PUSHOVER_TOKEN')
 PUSHOVER_KEY = get_config('PUSHOVER_KEY')

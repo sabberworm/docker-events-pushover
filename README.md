@@ -13,7 +13,6 @@ This script connects to a Docker server, and listens to events using the [Docker
 * `IGNORE_NAMES`: Whitespace-separated list of container names to ignore. Defaults to none.
 * `IGNORE_LABELS`: Whitespace-separated list of container labels to ignore. Defaults to `docker-events.ignore`. Label values are not considered.
 * `IGNORE_CLEAN_EXIT`: Set to a non-empty value to ignore `die` events that were clean (exit code `0`).
-* `BUILD_VERSION`: The version of docker-events-pushover, for version info output in hello and goodbye messages.
 * `DOCKER_URL`: The connection string for the docker client. Defaults to `unix://var/run/docker.sock` (socket connection).
 
 ## Run
