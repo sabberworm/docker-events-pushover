@@ -3,7 +3,7 @@ Receive Pushover notifications on docker container events.
 
 ## How it works
 
-This script connects to a Docker server, and listens to events using the [Docker events API](https://docs.docker.com/engine/api/v1.41/#operation/SystemEvents). When certain container events are triggered it sends the affected information to Pushover.
+This script connects to a Docker server, and listens to events using the [Docker events API](https://docs.docker.com/reference/api/engine/version/v1.52/#tag/System/operation/SystemEvents). When certain container events are triggered it sends the affected information to Pushover.
 
 ## Environment variables
 
