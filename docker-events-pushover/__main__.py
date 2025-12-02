@@ -18,7 +18,7 @@ import sys
 import time
 
 import docker
-from pushover import Client, init
+from .Pushover import Pushover
 
 
 def get_config(env_key, default_value=None):
@@ -75,7 +75,7 @@ APP_NAME = 'Docker Events Pushover'
 
 PUSHOVER_TOKEN = get_config('PUSHOVER_TOKEN')
 PUSHOVER_KEY = get_config('PUSHOVER_KEY')
-PUSHOVER_CLIENT = Client(PUSHOVER_KEY, api_token=PUSHOVER_TOKEN)
+PUSHOVER_CLIENT = Pushover(PUSHOVER_KEY, api_token=PUSHOVER_TOKEN)
 
 DOCKER_URL = get_config('DOCKER_URL', 'unix://var/run/docker.sock')
 DOCKER_CLIENT = docker.DockerClient(base_url=DOCKER_URL)
