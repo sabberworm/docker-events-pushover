@@ -50,7 +50,7 @@ def handle_event(event):
 
 
 def send_message(message):
-    PUSHOVER_CLIENT.send_message(message, title=f'Docker Event on {HOST}')
+    PUSHOVER_CLIENT.notify(message, title=f'Docker Event on {HOST}')
     pass
 
 
@@ -75,7 +75,7 @@ APP_NAME = 'Docker Events Pushover'
 
 PUSHOVER_TOKEN = get_config('PUSHOVER_TOKEN')
 PUSHOVER_KEY = get_config('PUSHOVER_KEY')
-PUSHOVER_CLIENT = Pushover(PUSHOVER_KEY, api_token=PUSHOVER_TOKEN)
+PUSHOVER_CLIENT = Pushover(PUSHOVER_TOKEN, PUSHOVER_KEY)
 
 DOCKER_URL = get_config('DOCKER_URL', 'unix://var/run/docker.sock')
 DOCKER_CLIENT = docker.DockerClient(base_url=DOCKER_URL)
