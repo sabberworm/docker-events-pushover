@@ -21,8 +21,8 @@ import logging
 import docker
 from .Pushover import Pushover
 
+logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
-logger.addHandler(logging.StreamHandler(sys.stdout))
 
 def get_config(env_key, default_value=None):
     value = os.getenv(env_key)
@@ -53,12 +53,12 @@ def handle_event(event):
 
 
 def send_message(message):
-    PUSHOVER_CLIENT.notify(message, title=f'Docker Event on {HOST}')
+    PUSHOVER_CLIENT.notify(message, title=f'{APP_NAME} on {HOST}')
     pass
 
 
 def exit_handler(signo, _stack_frame):
-    send_message(f'{APP_NAME} {signal.strsignal(signo)}. Goodbye!')
+    send_message(f'{APP_NAME} on {HOST} {signal.strsignal(signo)}. Goodbye!')
     sys.exit(0)
 
 
@@ -68,7 +68,7 @@ def host_server(docker_client):
 
 EVENT_FILTERS = get_config(
     'EVENTS',
-    'create update destroy die kill pause unpause start stop'
+    'create update destroy die kill pause unpause start stop restart'
 ).split()
 IGNORE_NAMES = get_config('IGNORE_NAMES', '').split()
 IGNORE_LABELS = get_config('IGNORE_LABELS', 'docker-events.ignore').split()
@@ -84,12 +84,13 @@ DOCKER_URL = get_config('DOCKER_URL', 'unix://var/run/docker.sock')
 DOCKER_CLIENT = docker.DockerClient(base_url=DOCKER_URL)
 
 HOST = host_server(DOCKER_CLIENT)
+logger.info('Starting %s for events %s with ignore_names=%s, ignore_labels=%s, ignore_clean_exit=%s', APP_NAME, EVENT_FILTERS, IGNORE_NAMES, IGNORE_LABELS, IGNORE_CLEAN_EXIT)
 
-send_message(f'{APP_NAME} reporting for duty on {HOST}')
+send_message('Reporting for duty')
 
 signal.signal(signal.SIGTERM, exit_handler)
 signal.signal(signal.SIGINT, exit_handler)
 
-for event in DOCKER_CLIENT.events(filters={'event': EVENT_FILTERS}, decode=True):
+for event in DOCKER_CLIENT.events(filters={'type': 'container', 'event': EVENT_FILTERS}, decode=True):
     logger.info(f'Got event {event} from docker')
     handle_event(event)
