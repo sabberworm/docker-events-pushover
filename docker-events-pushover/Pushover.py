@@ -6,7 +6,7 @@ from http.client import HTTPSConnection
 from urllib.parse import urlencode
 
 logger = logging.getLogger(__name__)
-logger.addHandler(logging.NullHandler())
+logger.addHandler(logging.StreamHandler(sys.stdout))
 
 class PushoverException(Exception):
     pass

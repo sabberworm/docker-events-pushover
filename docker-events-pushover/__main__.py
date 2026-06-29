@@ -22,7 +22,7 @@ import docker
 from .Pushover import Pushover
 
 logger = logging.getLogger(__name__)
-logger.addHandler(logging.NullHandler())
+logger.addHandler(logging.StreamHandler(sys.stdout))
 
 def get_config(env_key, default_value=None):
     value = os.getenv(env_key)
