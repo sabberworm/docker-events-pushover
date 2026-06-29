@@ -16,10 +16,13 @@ import os
 import signal
 import sys
 import time
+import logging
 
 import docker
 from .Pushover import Pushover
 
+logger = logging.getLogger(__name__)
+logger.addHandler(logging.NullHandler())
 
 def get_config(env_key, default_value=None):
     value = os.getenv(env_key)
@@ -88,4 +91,5 @@ signal.signal(signal.SIGTERM, exit_handler)
 signal.signal(signal.SIGINT, exit_handler)
 
 for event in DOCKER_CLIENT.events(filters={'event': EVENT_FILTERS}, decode=True):
+    logger.info(f'Got event {event} from docker')
     handle_event(event)
